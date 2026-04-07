@@ -1,0 +1,54 @@
+{
+  "categories": [
+    {
+      "id": "structure-fondamentale",
+      "title": "1. Structure Fondamentale",
+      "description": "Le squelette minimal d'un programme COBOL sur z/OS.",
+      "items": [
+        {
+          "id": "quatre-divisions",
+          "title": "Les 4 divisions COBOL",
+          "content": "Le programme est organisé en divisions. Commencez par un squelette clair avant d'ajouter vos paragraphes métier.",
+          "snippetTitle": "Squelette COBOL minimal",
+          "language": "cobol",
+          "tags": ["division", "program-id", "syntaxe"],
+          "codeSnippet": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. HELLOZOS.\n\n       ENVIRONMENT DIVISION.\n\n       DATA DIVISION.\n       WORKING-STORAGE SECTION.\n       01 WS-MESSAGE PIC X(20) VALUE 'HELLO MAINFRAME'.\n\n       PROCEDURE DIVISION.\n           DISPLAY WS-MESSAGE\n           STOP RUN."
+        },
+        {
+          "id": "working-storage",
+          "title": "Déclarer des variables en WORKING-STORAGE",
+          "content": "Utilisez des niveaux 01/05/10 pour structurer vos zones mémoire et garder vos PIC lisibles.",
+          "snippetTitle": "Variables usuelles",
+          "language": "cobol",
+          "tags": ["working-storage", "pic", "variables"],
+          "codeSnippet": "       DATA DIVISION.\n       WORKING-STORAGE SECTION.\n       01 WS-CUSTOMER.\n          05 WS-ID              PIC 9(5).\n          05 WS-NAME            PIC X(30).\n          05 WS-BALANCE         PIC S9(7)V99 COMP-3."
+        }
+      ]
+    },
+    {
+      "id": "jcl",
+      "title": "2. JCL",
+      "description": "Les bases pour lancer un job batch et référencer les datasets.",
+      "items": [
+        {
+          "id": "job-minimal",
+          "title": "Squelette d'un JOB",
+          "content": "Un JCL minimal contient une carte JOB, une étape EXEC et des DD pour les entrées/sorties.",
+          "snippetTitle": "JOB batch minimal",
+          "language": "jcl",
+          "tags": ["job", "exec", "dd"],
+          "codeSnippet": "//MEMOJOB  JOB (ACCT),'MEMO COBOL',CLASS=A,MSGCLASS=X,NOTIFY=&SYSUID\n//STEP01   EXEC PGM=IEFBR14\n//DDOUT    DD   DSN=USER.TEST.OUTPUT,\n//              DISP=(NEW,CATLG,DELETE),\n//              SPACE=(TRK,(1,1)),\n//              DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)"
+        },
+        {
+          "id": "compile-cobol",
+          "title": "Exemple de compilation COBOL",
+          "content": "Ce pattern montre une étape de compilation puis un lien-édition simple, pratique comme point de départ.",
+          "snippetTitle": "Compile + link-edit",
+          "language": "jcl",
+          "tags": ["compile", "link-edit", "igywcl"],
+          "codeSnippet": "//COBCLG   JOB (ACCT),'COBOL COMPILE',CLASS=A,MSGCLASS=X\n//COMPILE  EXEC IGYWCL\n//COBOL.SYSIN DD *\n       IDENTIFICATION DIVISION.\n       PROGRAM-ID. DEMO01.\n       PROCEDURE DIVISION.\n           DISPLAY 'BUILD OK'.\n           STOP RUN.\n/*"
+        }
+      ]
+    }
+  ]
+}
