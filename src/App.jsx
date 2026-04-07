@@ -59,6 +59,10 @@ function App() {
     })
   }
 
+  const handleTagClick = (tag) => {
+    setQuery(tag)
+  }
+
   const searchBar = (
     <label className="flex items-center gap-3 rounded-xl border border-green-500/20 bg-gray-900/70 px-3 py-2 text-sm text-gray-300 shadow-lg shadow-black/20">
       <Search size={16} className="text-green-400" />
@@ -123,12 +127,15 @@ function App() {
 
                   <div className="mb-3 flex flex-wrap gap-2">
                     {item.tags?.map((tag) => (
-                      <span
+                      <button
                         key={tag}
-                        className="rounded-full border border-green-500/20 bg-green-500/10 px-2.5 py-1 font-mono text-xs text-green-300"
+                        type="button"
+                        onClick={() => handleTagClick(tag)}
+                        className="cursor-pointer rounded-full border border-green-500/20 bg-green-500/10 px-2.5 py-1 font-mono text-xs text-green-300 transition-colors hover:border-green-400/40 hover:bg-green-500/20 hover:text-green-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400/60"
+                        aria-label={`Rechercher le tag ${tag}`}
                       >
                         {tag}
-                      </span>
+                      </button>
                     ))}
                   </div>
 

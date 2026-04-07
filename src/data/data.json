@@ -49,6 +49,56 @@
           "codeSnippet": "//COBCLG   JOB (ACCT),'COBOL COMPILE',CLASS=A,MSGCLASS=X\n//COMPILE  EXEC IGYWCL\n//COBOL.SYSIN DD *\n       IDENTIFICATION DIVISION.\n       PROGRAM-ID. DEMO01.\n       PROCEDURE DIVISION.\n           DISPLAY 'BUILD OK'.\n           STOP RUN.\n/*"
         }
       ]
+    },
+    {
+      "id": "fichiers-vsam-qsam",
+      "title": "3. Fichiers (VSAM/QSAM)",
+      "description": "Les instructions courantes pour déclarer et lire des fichiers batch sur z/OS.",
+      "items": [
+        {
+          "id": "file-control-select",
+          "title": "Déclaration FILE-CONTROL",
+          "content": "Déclarez le `SELECT` dans l'ENVIRONMENT DIVISION pour relier le nom logique COBOL à la DD JCL et préciser le mode d'accès.",
+          "snippetTitle": "SELECT ... ASSIGN TO ...",
+          "language": "cobol",
+          "tags": ["file-control", "select", "assign", "vsam", "qsam", "file-status"],
+          "codeSnippet": "       ENVIRONMENT DIVISION.\n       INPUT-OUTPUT SECTION.\n       FILE-CONTROL.\n           SELECT FIC-CLIENT ASSIGN TO DDCLIENT\n               ORGANIZATION IS SEQUENTIAL\n               ACCESS MODE IS SEQUENTIAL\n               FILE STATUS IS WS-FS-CLIENT."
+        },
+        {
+          "id": "lecture-sequentielle-next",
+          "title": "Lecture séquentielle",
+          "content": "Ce modèle illustre une boucle de lecture `NEXT RECORD` avec gestion de fin de fichier via `AT END`.",
+          "snippetTitle": "READ ... NEXT RECORD",
+          "language": "cobol",
+          "tags": ["read", "next-record", "at-end", "lecture", "sequentiel", "fichier"],
+          "codeSnippet": "       OPEN INPUT FIC-CLIENT\n       PERFORM UNTIL WS-FIN = 'O'\n           READ FIC-CLIENT NEXT RECORD\n               AT END\n                   MOVE 'O' TO WS-FIN\n               NOT AT END\n                   PERFORM TRAITER-ENREGISTREMENT\n           END-READ\n       END-PERFORM\n       CLOSE FIC-CLIENT."
+        }
+      ]
+    },
+    {
+      "id": "db2-sql",
+      "title": "4. Base de données (DB2 / SQL)",
+      "description": "Les patterns essentiels pour manipuler un curseur DB2 et traiter les retours SQLCODE.",
+      "items": [
+        {
+          "id": "curseur-db2",
+          "title": "Structure d'un curseur",
+          "content": "Déclarez le curseur, ouvrez-le, enchaînez les `FETCH`, puis fermez-le proprement après traitement.",
+          "snippetTitle": "DECLARE / OPEN / FETCH / CLOSE",
+          "language": "cobol",
+          "tags": ["db2", "sql", "cursor", "fetch", "open", "close"],
+          "codeSnippet": "       EXEC SQL\n           DECLARE C-CLIENT CURSOR FOR\n               SELECT ID_CLIENT, NOM\n               FROM CLIENTS\n       END-EXEC.\n\n       EXEC SQL\n           OPEN C-CLIENT\n       END-EXEC.\n\n       PERFORM UNTIL SQLCODE NOT = 0\n           EXEC SQL\n               FETCH C-CLIENT\n               INTO :WS-ID-CLIENT, :WS-NOM\n           END-EXEC\n\n           IF SQLCODE = 0\n               PERFORM TRAITER-CLIENT\n           END-IF\n       END-PERFORM.\n\n       EXEC SQL\n           CLOSE C-CLIENT\n       END-EXEC."
+        },
+        {
+          "id": "gestion-sqlcode",
+          "title": "Gestion du SQLCODE",
+          "content": "Testez systématiquement `SQLCODE` après un `FETCH`, un `SELECT` ou un `UPDATE` pour distinguer succès, fin de données et erreur.",
+          "snippetTitle": "Contrôle de retour SQLCODE",
+          "language": "cobol",
+          "tags": ["sqlcode", "db2", "erreur", "not-found", "100", "diagnostic"],
+          "codeSnippet": "       IF SQLCODE = 0\n           DISPLAY 'TRAITEMENT SQL OK'\n       ELSE\n           IF SQLCODE = 100\n               DISPLAY 'AUCUNE LIGNE TROUVEE'\n           ELSE\n               DISPLAY 'ERREUR SQL DB2 : ' SQLCODE\n               PERFORM ABEND-PROGRAMME\n           END-IF\n       END-IF."
+        }
+      ]
     }
   ]
 }
